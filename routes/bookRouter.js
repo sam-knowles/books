@@ -29,7 +29,7 @@ bookRouter.post("/", (req, res) => {
     const newBook = req.body
     newBook._id = uuid()
     books.push(newBook)
-    res.send(`Successfully added ${newBook.title} to the database`)
+    res.send(newBook)
 })
 
 bookRouter.delete("/:bookId", (req, res) => {
