@@ -31,7 +31,7 @@ export default function App(){
       function editBook(updates, bookId){
         axios.put(`/books/${bookId}`, updates)
         .then(res => {
-          setBooks(prevBooks => prevBooks.map(book => book.id !== bookId ? book : res.data))
+          setBooks(prevBooks => prevBooks.map(book => book._id !== bookId ? book : res.data))
         })
         .catch(err => console.log(err))
       }

@@ -5,8 +5,8 @@ export default function AddBookForm(props){
     const [inputs, setInputs] = useState(initInputs)
 
     function handleChange(e){
-        const { title, value } = e.target
-        setInputs(prevInputs => ({...prevInputs, [title]: value}))
+        const { name, value } = e.target
+        setInputs(prevInputs => ({...prevInputs, [name]: value}))
     }
 
     function handleSubmit(e){

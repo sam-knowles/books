@@ -31,7 +31,7 @@ export default function Book(props){
                     <button
                         onClick={() => setEditToggle(prevToggle => !prevToggle)}>
                         Close
-                        </button>
+                    </button>
                 </>
             }
         </div>
