@@ -1,35 +1,45 @@
 const express = require('express')
 const bookRouter = express.Router()
-const { v4: uuid } = require('uuid');
+const Book = require('../models/book.js')
 
-const books = [
-    { title: 'Homelander', genre: "action", _id: uuid() },
-    { title: 'Basketball', genre: "sports", _id: uuid() },
-    { title: 'Kissing', genre: "action", _id: uuid() },
-    { title: 'Tennis', genre: "sports", _id: uuid() }
-]
-
-bookRouter.get("/", (req, res) => {
-    res.send(books)
+bookRouter.get("/", (req, res, next) => {
+    Book.find((err, books) => {
+        if(err){
+            res.status(500)
+            return next(err)
+        }
+        return res.status(200).send(books)
+    })
 })
 
-bookRouter.get("/:bookId", (req, res) => {
+
+bookRouter.get("/:bookId", (req, res, next) => {
     const bookId = req.params.bookId
     const foundBook = books.find(book => book._id === bookId)
-    res.send(foundBook)
+    if(!foundBook){
+        const error = new Error(`The item with id ${BookId} was not found`)
+        res.status(500)
+        return next(error)
+    }
+    res.status(200).send(foundBook)
 })
 
-bookRouter.get("/search/genre", (req, res) => {
+bookRouter.get("/search/genre", (req, res, next) => {
     const genre = req.query.genre
+    if(!genre){
+        const error = new Error("You must provide a genre")
+        res.status(500)
+        return next(error)
+    }
     const filteredBooks = books.filter(book => book.genre === genre)
     res.send(filteredBooks)
 })
 
+
 bookRouter.post("/", (req, res) => {
     const newBook = req.body
-    newBook._id = uuid()
     books.push(newBook)
-    res.send(newBook)
+    res.status(201).send(newBook)
 })
 
 bookRouter.delete("/:bookId", (req, res) => {
@@ -44,20 +54,8 @@ bookRouter.put('/:bookId', (req, res) => {
     const updatedObject = req.body
     const bookIndex = books.findIndex(book => book._id === bookId)
     const updatedBook = Object.assign(books[bookIndex], updatedObject)
-    res.send(updatedBook)
+    res.status(201).send(updatedBook)
 })
-
-// bookRouter.route("/")
-//     .get((req, res) => {
-//         res.send(books)
-//     })
-//     .post((req, res) => {
-//         const newBook = req.body
-//         books.push(newBook)
-//         res.send(`Successfully added ${newBook.title} to the database!`)
-//     })
-
-
 
 
 
