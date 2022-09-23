@@ -35,6 +35,16 @@ export default function App(){
         })
         .catch(err => console.log(err))
       }
+
+      function handleFilter(e){
+          if(e.target.value === "reset"){
+              getBooks()
+          } else {
+          axios.get(`/books/search/genre?genre=${e.target.value}`)
+          .then(res => setBooks(res.data))
+          .catch(err => console.log(err))
+          }
+      }
     
       useEffect(() => {
         getBooks()
@@ -46,6 +56,13 @@ export default function App(){
               submit={addBook}
               btnText="Add Book"
             />
+            <h4>Filter by genre</h4>
+            <select onChange={handleFilter}>
+                <option value="reset">All Books</option>
+                <option value="action">Action</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="horror">Horror</option>
+            </select>
             { 
               books.map(book => 
                 <Book 

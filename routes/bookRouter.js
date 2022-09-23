@@ -34,16 +34,15 @@ bookRouter.post("/", (req, res, next) => {
 //     res.status(200).send(foundBook)
 // })
 
-// bookRouter.get("/search/genre", (req, res, next) => {
-//     const genre = req.query.genre
-//     if(!genre){
-//         const error = new Error("You must provide a genre")
-//         res.status(500)
-//         return next(error)
-//     }
-//     const filteredBooks = books.filter(book => book.genre === genre)
-//     res.send(filteredBooks)
-// })
+bookRouter.get("/search/genre", (req, res, next) => {
+    Book.find({ genre: req.query.genre }, (err, books) => {
+        if(err){
+            res.status(500)
+            return next(err)
+        }
+        return res.status(200).send(books)
+    })
+})
 
 
 bookRouter.delete("/:bookId", (req, res, next) => {
@@ -58,7 +57,7 @@ bookRouter.delete("/:bookId", (req, res, next) => {
 
 
 
-bookRouter.put('/:bookId', (req, res) => {
+bookRouter.put('/:bookId', (req, res, next) => {
     Book.findOneAndUpdate(
         { _id: req.params.bookId },
         req.body,
