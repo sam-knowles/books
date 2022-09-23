@@ -6,15 +6,7 @@ const mongoose = require('mongoose')
 app.use(express.json())
 app.use(morgan('dev'))
 
-mongoose.connect("mongodb://localhost:27017/bookdb", 
-{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-},
- () => console.log('Connected to the Database')
-)
+mongoose.connect("mongodb://localhost:27017/bookdb", () => console.log('connected to database'))
 
 app.use("/books", require("./routes/bookRouter.js"))
 
