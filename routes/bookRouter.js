@@ -13,7 +13,7 @@ bookRouter.get("/", (req, res, next) => {
 })
 
 bookRouter.post("/", (req, res, next) => {
-    req.body.user = req.user._id
+    req.body.user = req.auth._id
     const newBook = new Book(req.body)
     newBook.save((err, savedBook) => {
         if(err){
