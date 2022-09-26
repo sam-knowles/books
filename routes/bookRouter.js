@@ -12,6 +12,16 @@ bookRouter.get("/", (req, res, next) => {
     })
 })
 
+bookRouter.get("/user", (req, res, next) => {
+    Book.find({user: req.auth._id}, (err, books) => {
+        if(err){
+            res.status(500)
+            return next(err)
+        }
+        return res.status(200).send(books)
+    })
+})
+
 bookRouter.post("/", (req, res, next) => {
     req.body.user = req.auth._id
     const newBook = new Book(req.body)
@@ -24,16 +34,6 @@ bookRouter.post("/", (req, res, next) => {
     })
 })
 
-// bookRouter.get("/:bookId", (req, res, next) => {
-//     const bookId = req.params.bookId
-//     const foundBook = books.find(book => book._id === bookId)
-//     if(!foundBook){
-//         const error = new Error(`The item with id ${BookId} was not found`)
-//         res.status(500)
-//         return next(error)
-//     }
-//     res.status(200).send(foundBook)
-// })
 
 bookRouter.get("/search/genre", (req, res, next) => {
     Book.find({ genre: req.query.genre }, (err, books) => {
@@ -47,7 +47,7 @@ bookRouter.get("/search/genre", (req, res, next) => {
 
 
 bookRouter.delete("/:bookId", (req, res, next) => {
-    Book.findOneAndDelete({ _id: req.params.bookId }, (err, deletedItem) => {
+    Book.findOneAndDelete({ _id: req.params.bookId, user: req.auth._id }, (err, deletedItem) => {
         if(err){
             res.status(500)
             return next(err)
@@ -60,7 +60,7 @@ bookRouter.delete("/:bookId", (req, res, next) => {
 
 bookRouter.put('/:bookId', (req, res, next) => {
     Book.findOneAndUpdate(
-        { _id: req.params.bookId },
+        { _id: req.params.bookId, user: req.auth._id },
         req.body,
         { new: true },
         (err, updatedBook) => {
