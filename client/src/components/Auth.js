@@ -1,29 +1,52 @@
-import React from 'react'
-import { Switch, Route} from 'react-router-dom'
-import Navbar from './components/Navbar.js'
-import Auth from './components/Auth.js'
-import Profile from './components/Profile.js'
-import Public from './components/Public.js'
-import App from '../App.js'
+import React, { useState } from 'react'
+import AuthFormn from './AuthForm.js'
 
-export default function App() {
+const initInputs = {username: "", password: "" }
+
+export default function Auth(){
+    const [inputs, setInputs] = useState(initInputs)
+    const [toggle, setToggle] = useState(false)
+
+    function handleChange(e){
+        const {name, value} = e.target
+        setInputs(prevImputs => ({
+            ...prevInputs,
+            [name]: value
+        }))
+    }
+
+    function handleSignup(e){
+        e.preventDefault()
+    }
+
+    function HandleLogin(e){
+        e.preventDefault()
+    }
+
     return (
-        <div> 
-        <Navbar />
-        <Switch>
-            <Route
-                exact path='/'
-                render={() => <Auth />}
-            />
-            <Route
-                exact path='/profile'
-                render={() => <Profile />}
-            />
-            <Route
-                exact path='/public'
-                render={() => <Public />}
-            />
-        </Switch>
+        <div>
+            <h1>Book App</h1>
+            { !toggle ?
+            <>
+                <AuthForm
+                    handleChange={handleChange}
+                    handleSubmit={handleLogin}
+                    inputs={inputs}
+                    btnText="Sign up"
+                />
+                <p> onClick={() => setToggle(prev => !prev)}>Already a member?</p>
+            </>
+        :
+            <>
+                <AuthForm
+                    handleChange={handleChange}
+                    handleSubmit={handleLogin}
+                    inputs={inputs}
+                    btnText="Login"
+                />
+                <p> onClick={() => setToggle(prev => !prev)}>Not a member?</p>
+            </>    
+        }
         </div>
     )
 }
